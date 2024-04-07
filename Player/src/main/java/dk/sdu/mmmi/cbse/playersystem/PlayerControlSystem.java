@@ -7,7 +7,9 @@ import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ServiceLoader;
 
 import static java.util.stream.Collectors.toList;
@@ -30,6 +32,16 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 double changeY = Math.sin(Math.toRadians(player.getRotation()));
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
+            }
+            if(gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                //debugging purposes
+                List<BulletSPI> bulletSPIS = (List<BulletSPI>) getBulletSPIs();
+                System.out.println(bulletSPIS.size());
+                bulletSPIS.forEach(System.out::println);
+
+                getBulletSPIs().stream().findFirst().ifPresent(
+                        spi -> {world.addEntity(spi.createBullet(player, gameData));}
+                );
             }
             
         if (player.getX() < 0) {
